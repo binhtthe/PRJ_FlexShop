@@ -1,0 +1,6 @@
+@PRJ_MKS_BTT_HostAddress = http://localhost:5111
+
+GET {{PRJ_MKS_BTT_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
