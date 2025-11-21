@@ -31,5 +31,6 @@
         public ICollection<ProductImage> Images { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
         public ICollection<Review> Reviews { get; set; }
+        public ICollection<Wishlist> Wishlists { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+﻿using PRJ_MKS_BTT.Model;
+
+namespace PRJ_MKS_BTT.IRepository
+{
+    public interface ICategoryRepository
+    {
+        Task<Category> GetCategoryByIdAsync(int categoryId);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<Category> CreateCategoryAsync(Category category);
+        Task<Category> UpdateCategoryAsync(Category category);
+        Task<bool> DeleteCategoryAsync(int categoryId);
+        Task<List<Category>> GetCategoriesByParentIdAsync(int parentId);
+        Task<List<Category>> GetRootCategoriesAsync();
+        Task<bool> ExistsByNameInParentAsync(string name, int? parentId);
+
+
+    }
+}

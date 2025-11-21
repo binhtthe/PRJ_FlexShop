@@ -24,12 +24,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IService\" />
-    <Folder Include="IRepository\" />
-    <Folder Include="DTO\" />
-    <Folder Include="Repository\" />
-    <Folder Include="Service\" />
-  </ItemGroup>
-
 </Project>

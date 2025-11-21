@@ -9,10 +9,14 @@ namespace PRJ_MKS_BTT.Model
         public string PasswordHash { get; set; }
         public string Role { get; set; }
         public string FullName { get; set; }
-        public string Phone { get; set; }
-        public string Avatar { get; set; }
+        public string? Phone { get; set; }
+        public string? Avatar { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsEmailVerified { get; set; } = false;
+        public string EmailVerifyToken { get; set; }
+        public DateTime? EmailVerifyTokenExpiry { get; set; }
+
 
         public ICollection<UserAddress> Addresses { get; set; }
         public Seller Seller { get; set; }

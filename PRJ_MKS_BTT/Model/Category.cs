@@ -8,6 +8,7 @@
         public string Slug { get; set; }
         public string IconUrl { get; set; }
         public bool IsActive { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public Category Parent { get; set; }
