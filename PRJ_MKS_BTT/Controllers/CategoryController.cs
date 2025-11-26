@@ -44,5 +44,60 @@ namespace PRJ_MKS_BTT.Controllers
             return Ok(category);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromBody] PRJ_MKS_BTT.Request.CategoryRequest request)
+        {
+            try
+            {
+                var createdCategory = await _categoryService.CreateCategory(request);
+                if (createdCategory == null)
+                {
+                    return BadRequest(new { message = "Failed to create category" });
+                }
+
+                return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation error while creating category");
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while creating category");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpPut("{id:int}")]
+
+        public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromBody] PRJ_MKS_BTT.Request.CategoryRequest request)
+        {
+            try
+            {
+                if (request == null)
+                {
+                    return BadRequest(new { message = "Invalid body" });
+                }
+
+                var updatedCategory = await _categoryService.UpdateCategory(id, request);
+                if (updatedCategory == null)
+                {
+                    return NotFound(new { message = "Category not found" });
+                }
+                return Ok(updatedCategory);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation error while updating category");
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while updating category");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
+            }
+        }
+
     }
 }

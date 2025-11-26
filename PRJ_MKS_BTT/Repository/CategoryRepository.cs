@@ -16,15 +16,18 @@ namespace PRJ_MKS_BTT.Repository
         public async Task<Category> CreateCategoryAsync(Category category)
         {
            category.CreatedAt = DateTime.UtcNow;
-             _context.Categories.AddAsync(category);
+            category.UpdatedAt = DateTime.UtcNow;
+            _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
             return category;
 
         }
 
-        public async Task<bool> DeleteCategoryAsync(int categoryId)
+        public async Task<bool> DeleteCategoryAsync(Category categoryId)
         {
-            throw new NotImplementedException();
+           _context.Categories.Remove(categoryId);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
@@ -70,11 +73,28 @@ namespace PRJ_MKS_BTT.Repository
                .Where(c => c.ParentId == parentId)
                .ToListAsync();
         }
+
         public async Task<bool> ExistsByNameInParentAsync(string name, int? parentId)
         {
             return await _context.Categories
                 .AnyAsync(c => c.Name == name && c.ParentId == parentId);
         }
+         public async Task<bool> ExistsByNameIdInParentAsync(string name, int? parentId, int categoryId)
+        {
+            return await _context.Categories
+                .AnyAsync(c => c.Name == name && c.ParentId == parentId && c.Id != categoryId );
+        }
 
+        public async Task<bool> HasChildrenAsync(int categoryId)
+        {
+          return await _context.Categories
+                .AnyAsync(c => c.ParentId == categoryId);
+        }
+
+        public async Task<bool> HasProductsAsync(int categoryId)
+        {
+            return await _context.Products
+                .AnyAsync(p => p.CategoryId == categoryId);
+        }
     }
 }

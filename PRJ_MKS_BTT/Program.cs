@@ -20,6 +20,12 @@
     builder.Services.AddScoped<PRJ_MKS_BTT.IService.IEmailService, PRJ_MKS_BTT.Service.EmailService>();
 builder.Services.AddScoped<PRJ_MKS_BTT.IRepository.ICategoryRepository, PRJ_MKS_BTT.Repository.CategoryRepository>();
 builder.Services.AddScoped<PRJ_MKS_BTT.IService.ICategoryService, PRJ_MKS_BTT.Service.CategoryService>();
+
+builder.Services.AddScoped<PRJ_MKS_BTT.IService.IProductService,PRJ_MKS_BTT.Service.ProductService>();
+builder.Services.AddScoped<PRJ_MKS_BTT.IRepository.IProductRepository, PRJ_MKS_BTT.Repository.ProductRepository>();
+builder.Services.AddScoped<PRJ_MKS_BTT.IRepository.IUnitOfWork, PRJ_MKS_BTT.Repository.EfUnitOfWork>();
+
+
 // JWT Authentication
 
 

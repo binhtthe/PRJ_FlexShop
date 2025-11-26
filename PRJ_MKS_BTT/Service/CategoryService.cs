@@ -81,6 +81,26 @@ namespace PRJ_MKS_BTT.Service
             }
         }
 
+        public async Task<bool> DeleteCategoryAsync(int categoryId)
+        {
+            try
+            {
+                var categoryToDelete = await _categoryRepository.GetCategoryByIdAsync(categoryId);
+                if (categoryToDelete == null)
+                    return false;
+                if (await _categoryRepository.HasChildrenAsync(categoryId))
+                    throw new InvalidOperationException("Cannot delete category with subcategories");
+                if (await _categoryRepository.HasProductsAsync(categoryId))
+                    throw new InvalidOperationException("Cannot delete category with associated products");
+
+                 await _categoryRepository.DeleteCategoryAsync(categoryToDelete);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<List<CategoryResponse>> GetCategoriesByParentIdAsync(int parentId)
         {
@@ -146,9 +166,61 @@ namespace PRJ_MKS_BTT.Service
             }
         }
 
-        public Task<CategoryResponse> UpdateCategory(int categoryId, CategoryRequest request)
+        public async Task<CategoryResponse> UpdateCategory(int categoryId, CategoryRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                
+                var categoryToUD = await _categoryRepository.GetCategoryByIdAsync(categoryId);
+                if (categoryToUD == null)
+                    return null;
+
+            
+                if (request.ParentId.HasValue)
+                {
+                    var parent = await _categoryRepository.GetCategoryByIdAsync(request.ParentId.Value);
+                    if (parent == null)
+                        throw new ArgumentException("Parent category does not exist");
+                }
+
+                // 3. Check duplicate name (LOẠI TRỪ chính nó)
+                bool isDuplicate = await _categoryRepository.ExistsByNameIdInParentAsync(
+                    request.Name,
+                    request.ParentId,
+                    categoryId
+                );
+
+                if (isDuplicate)
+                    throw new ArgumentException("Category name already exists in this level");
+
+                // 4. Update fields
+                categoryToUD.Name = request.Name;
+                categoryToUD.ParentId = request.ParentId;
+                categoryToUD.Slug = string.IsNullOrWhiteSpace(request.Slug)
+                    ? request.Name.ToLower().Replace(" ", "-")
+                    : request.Slug;
+                categoryToUD.IconUrl = request.IconUrl;
+                categoryToUD.IsActive = request.IsActive;
+
+                
+                var updatedCategory = await _categoryRepository.UpdateCategoryAsync(categoryToUD);
+
+               
+                return new CategoryResponse
+                {
+                    Id = updatedCategory.Id,
+                    Name = updatedCategory.Name,
+                    ParentId = updatedCategory.ParentId,
+                    Slug = updatedCategory.Slug,
+                    IconUrl = updatedCategory.IconUrl,
+                    IsActive = updatedCategory.IsActive
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
     }
 }

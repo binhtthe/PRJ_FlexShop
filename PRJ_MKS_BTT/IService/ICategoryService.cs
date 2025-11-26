@@ -10,6 +10,7 @@ namespace PRJ_MKS_BTT.IService
         Task<CategoryResponse> GetCategoryByIdAsync(int categoryId);
         Task<CategoryResponse> CreateCategory(CategoryRequest request);
         Task<CategoryResponse> UpdateCategory(int categoryId, CategoryRequest request);
+        Task<bool> DeleteCategoryAsync(int categoryId);
 
     }
 }
